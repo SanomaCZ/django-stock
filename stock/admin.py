@@ -4,7 +4,15 @@ from stock.models import Item, Operation
 
 class OperationInlineAdmin(admin.TabularInline):
     model = Operation
-    extra = 1
+    extra = 0
+    readonly_fields = ('user', 'type', 'pieces', 'attachment')
+
+    def has_delete_permission(self, request, obj):
+        return False
+
+
+class OperationAdmin(admin.ModelAdmin):
+    pass
 
 
 class ItemAdmin(admin.ModelAdmin):
