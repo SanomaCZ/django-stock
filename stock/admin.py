@@ -15,11 +15,19 @@ class OperationInlineAdmin(admin.TabularInline):
 
 
 class OperationAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = ('user', 'item', 'operation_type', 'ts')
+    list_filter = ('user', 'ts')
+    exclude = ('user',)
+
+    def save_model(self, request, obj, form, change):
+        obj.user = request.user
+        return super(OperationAdmin, self).save_model(request, obj, form, change)
 
 
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'thumbnail', 'pieces')
+    search_fields = ('name', 'slug')
     readonly_fields = ('pieces', 'slug')
     inlines = [OperationInlineAdmin]
 
@@ -34,4 +42,4 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Item, ItemAdmin)
-admin.site.register([Operation])
+admin.site.register(Operation, OperationAdmin)
