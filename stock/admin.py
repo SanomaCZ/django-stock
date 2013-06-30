@@ -1,4 +1,7 @@
+from django.db import models
 from django.contrib import admin
+from sorl.thumbnail.admin.current import AdminImageWidget
+from sorl.thumbnail.shortcuts import get_thumbnail
 from stock.models import Item, Operation
 
 
@@ -16,9 +19,18 @@ class OperationAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'pieces')
+    list_display = ('name', 'thumbnail', 'pieces')
     readonly_fields = ('pieces', 'slug')
     inlines = [OperationInlineAdmin]
+
+    formfield_overrides = {
+        models.ImageField: {'widget': AdminImageWidget},
+    }
+
+    def thumbnail(self, obj):
+        im = get_thumbnail(obj.photo, "100x100", crop='center')
+        return '<a href="%s"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
+    thumbnail.allow_tags = True
 
 
 admin.site.register(Item, ItemAdmin)
