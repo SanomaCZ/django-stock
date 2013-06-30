@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib import admin
-from django import forms
 
 from sorl.thumbnail.admin.current import AdminImageWidget
 from sorl.thumbnail.shortcuts import get_thumbnail
@@ -21,15 +20,11 @@ class OperationInlineAdmin(admin.TabularInline):
 class OperationAdmin(admin.ModelAdmin):
 
     list_display = ('user', 'item', 'operation_type', 'ts')
-    list_filter = ('user', 'ts')
+    list_filter = ('user', 'ts', 'operation_type')
+    search_fields = ('item__name', 'item__slug')
     exclude = ('user',)
 
     form = OperationForm
-
-    def save_form(self, request, form, change):
-        if change:
-            raise forms.ValidationError("Cannot edit existing operation")
-        super(OperationAdmin, self).save_form(request, form, change)
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
