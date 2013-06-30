@@ -1,0 +1,17 @@
+*.py[co]
+.devtmp
+*.egg
+*.egg-info
+build/
+dist/
+*/settings/local.py
+
+*/project_static/css/*.css
+*/project_static/css/*.less
+*/project_static/less/*.css
+
+stock/project_static/js/common.js
+stock/project_static/js/app-built.js
+
+.coverage
+nosetests.xml

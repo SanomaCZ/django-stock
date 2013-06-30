@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# arguments:
+# -none-	syncdb + migrate + reqs + lessc
+# first		-as above- + db dir + admin user + git submodules
+# lessc		lessc
+
+if [ "$1" = "first" ] || [ "$1" = "firstrun" ]; then
+	mkdir -p ./.devtmp/media ./.devtmp/static
+	chmod +x ./manage.py
+	pip install -r ./requirements-dev.txt
+	./manage.py syncdb --noinput
+	./manage.py migrate
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | ./manage.py shell
+	git submodule update --init
+fi
+
+if [ ! $1 ]; then
+	pip install -r ./requirements-dev.txt
+	./manage.py syncdb --noinput
+	./manage.py migrate
+fi
+
+# all the time
+# echo "compiling .less"
+# lessc --verbose stock/project_static/less/master.less > stock/project_static/css/master.css

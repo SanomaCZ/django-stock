@@ -1,0 +1,8 @@
+-r requirements.txt
+
+nose
+coverage
+
+django-debug-toolbar
+https://github.com/WoLpH/Cache-Debug-Toolbar/archive/master.zip#egg=cache_toolbar
+pip-tools
