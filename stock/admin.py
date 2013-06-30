@@ -12,7 +12,7 @@ from stock.models import Item, Operation
 class OperationInlineAdmin(admin.TabularInline):
     model = Operation
     extra = 0
-    readonly_fields = ('user', 'operation_type', 'pieces', 'attachment')
+    readonly_fields = ('ts', 'user', 'operation_type', 'pieces', 'attachment')
 
     def has_delete_permission(self, request, obj):
         return False
@@ -20,6 +20,7 @@ class OperationInlineAdmin(admin.TabularInline):
     def has_add_permission(self, request):
         return False
 
+    ordering = ('-ts',)
 
 class OperationAdmin(admin.ModelAdmin):
 
