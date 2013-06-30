@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from django.http import HttpResponseForbidden
 
 from sorl.thumbnail.admin.current import AdminImageWidget
 from sorl.thumbnail.shortcuts import get_thumbnail
@@ -32,6 +33,12 @@ class OperationAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.user = request.user
         return super(OperationAdmin, self).save_model(request, obj, form, change)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        if request.method == 'POST' and object_id:
+            return HttpResponseForbidden("Cannot change existing operation")
+
+        return super(OperationAdmin, self).change_view(request, object_id, form_url, extra_context)
 
 
 class ItemAdmin(admin.ModelAdmin):
