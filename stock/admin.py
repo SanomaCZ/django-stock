@@ -1,21 +1,30 @@
 from django.db import models
 from django.contrib import admin
+from django import forms
+
 from sorl.thumbnail.admin.current import AdminImageWidget
 from sorl.thumbnail.shortcuts import get_thumbnail
+
+from stock.forms import OperationForm
 from stock.models import Item, Operation
 
 
 class OperationInlineAdmin(admin.TabularInline):
     model = Operation
     extra = 0
-    readonly_fields = ('user', 'type', 'pieces', 'attachment')
+    readonly_fields = ('user', 'operation_type', 'pieces', 'attachment')
 
     def has_delete_permission(self, request, obj):
         return False
 
 
 class OperationAdmin(admin.ModelAdmin):
-    pass
+    form = OperationForm
+
+    def save_form(self, request, form, change):
+        if change:
+            raise forms.ValidationError("Cannot edit existing operation")
+        super(OperationAdmin, self).save_form(request, form, change)
 
 
 class ItemAdmin(admin.ModelAdmin):
@@ -34,4 +43,4 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Item, ItemAdmin)
-admin.site.register([Operation])
+admin.site.register(Operation, OperationAdmin)
