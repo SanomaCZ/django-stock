@@ -50,7 +50,7 @@ class Operation(models.Model):
         verbose_name_plural = _("Operations")
 
     def __unicode__(self):
-        return u"%s (%s)" % (self.item.title, self.get_operation_type_display())
+        return u"%s (%s)" % (self.item.name, self.get_operation_type_display())
 
 
 @receiver(post_save, sender=Operation)
