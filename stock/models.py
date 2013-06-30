@@ -8,7 +8,6 @@ from django.utils.timezone import now
 
 
 class Item(models.Model):
-
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(max_length=64, unique=True, editable=False)
     description = models.TextField(_("Description"), blank=True)
@@ -18,7 +17,6 @@ class Item(models.Model):
     def save(self, **kwargs):
         self.slug = slugify(self.name)[:64]
         super(Item, self).save(**kwargs)
-        
 
     def __unicode__(self):
         return u"%s: %d" % (self.name, self.pieces)
@@ -29,17 +27,16 @@ class Item(models.Model):
 
 
 TYPE_CHOICES = (
-    ("a", _("Income")),
+    ("a", _("Receipt")),
     ("r", _("Issue")),
     ("n", _("No-ops"))
 )
 
 
 class Operation(models.Model):
-
     user = models.ForeignKey(User, verbose_name=_("Processed by"))
     item = models.ForeignKey(Item, verbose_name=_("Item"))
-    type = models.CharField(_("Operation type"), max_length='1', db_index=True, choices=TYPE_CHOICES)
+    operation_type = models.CharField(_("Operation type"), max_length='1', db_index=True, choices=TYPE_CHOICES)
     pieces = models.PositiveIntegerField(_("Pieces"), default=0)
     attachment = models.FileField(_("Document"), upload_to="a/", null=True, blank=True)
     ts = models.DateTimeField(_("Processed at"), editable=False)
@@ -56,11 +53,9 @@ class Operation(models.Model):
 @receiver(post_save, sender=Operation)
 def update_item(sender, **kwargs):
     op = kwargs.pop("instance")
-
-    # TODO: avoid negative pieces in stock
-    if op.type == "a":
+    if op.operation_type == "a":
         op.item.pieces += op.pieces
         op.item.save(force_update=True)
-    elif op.type == "r":
+    elif op.operation_type == "r":
         op.item.pieces -= op.pieces
         op.item.save(force_update=True)
