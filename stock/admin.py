@@ -22,6 +22,7 @@ class OperationInlineAdmin(admin.TabularInline):
 
     ordering = ('-ts',)
 
+
 class OperationAdmin(admin.ModelAdmin):
 
     list_display = ('user', 'item', 'operation_type', 'ts')
@@ -45,7 +46,7 @@ class OperationAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'thumbnail', 'pieces')
     search_fields = ('name', 'slug')
-    readonly_fields = ('pieces', 'slug')
+    readonly_fields = ('pieces',)
     inlines = [OperationInlineAdmin]
 
     formfield_overrides = {
