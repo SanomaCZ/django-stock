@@ -120,10 +120,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.sessions',
-    'django.contrib.redirects',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-    'django.contrib.sitemaps',
 
     'grappelli',  # before admin
     'django.contrib.admin',
