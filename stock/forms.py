@@ -10,7 +10,7 @@ class OperationForm(forms.ModelForm):
     def clean(self):
         data = self.cleaned_data
 
-        if data['operation_type'] == u'r':
+        if data.get('operation_type') == 'r':
             if data['item'].pieces - data['pieces'] < 0:
                 raise forms.ValidationError(_("Given operation results in negative pieces on stock"))
 

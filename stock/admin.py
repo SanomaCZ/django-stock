@@ -1,6 +1,8 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import admin
 from django.http import HttpResponseForbidden
+from django.utils.translation import ugettext as _
 
 from sorl.thumbnail.admin.current import AdminImageWidget
 from sorl.thumbnail.shortcuts import get_thumbnail
@@ -32,6 +34,13 @@ class OperationAdmin(admin.ModelAdmin):
 
     form = OperationForm
 
+    def get_form(self, request, obj=None, **kwargs):
+        if not obj and 'item' in request.GET:
+            self.add_form_template = 'add_item_operation.html'
+        else:
+            self.add_form_template = None
+        return super(OperationAdmin, self).get_form(request, obj, **kwargs)
+
     def save_model(self, request, obj, form, change):
         obj.user = request.user
         return super(OperationAdmin, self).save_model(request, obj, form, change)
@@ -44,7 +53,7 @@ class OperationAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'thumbnail', 'pieces')
+    list_display = ('name', 'thumbnail', 'pieces', 'add_operation')
     search_fields = ('name', 'slug')
     readonly_fields = ('pieces',)
     inlines = [OperationInlineAdmin]
@@ -58,6 +67,10 @@ class ItemAdmin(admin.ModelAdmin):
         return '<a href="%s"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
     thumbnail.allow_tags = True
 
+    def add_operation(self, obj):
+        url = reverse('admin:%s_%s_add' % ('stock', 'operation'), current_app=self.admin_site.name)
+        return '<a href="%s?item=%s" id="add_id_operation" onclick="return showAddAnotherPopup(this);">%s</a><span id="id_operation"></span>' % (url, obj.pk, _("Add new operation"))
+    add_operation.allow_tags = True
 
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Operation, OperationAdmin)
