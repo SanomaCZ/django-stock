@@ -1,8 +1,12 @@
+from os.path import basename
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import admin
+from django.forms.widgets import Widget
 from django.http import HttpResponseForbidden
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 from sorl.thumbnail.admin.current import AdminImageWidget
 from sorl.thumbnail.shortcuts import get_thumbnail
@@ -11,10 +15,22 @@ from stock.forms import OperationForm
 from stock.models import Item, Operation
 
 
+class LinkWidget(Widget):
+
+    def render(self, name, value, attrs=None):
+        if value:
+            return mark_safe('<a href="%s%s">%s</a>' % (settings.MEDIA_URL, value, str(value).split("/")[-1]))
+        return ''
+
+
 class OperationInlineAdmin(admin.TabularInline):
     model = Operation
     extra = 0
-    readonly_fields = ('ts', 'user', 'operation_type', 'pieces', 'attachment')
+    readonly_fields = ('ts', 'user', 'operation_type', 'pieces')
+
+    formfield_overrides = {
+        models.FileField: {'widget': LinkWidget},
+    }
 
     def has_delete_permission(self, request, obj):
         return False
