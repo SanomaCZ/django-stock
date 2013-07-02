@@ -14,7 +14,7 @@ class OperationForm(forms.ModelForm):
             if data['item'].pieces - data['pieces'] < 0:
                 raise forms.ValidationError(_("Given operation results in negative pieces on stock"))
 
-        if self.instance:
+        if self.instance and self.instance.pk:
             for forbidden_prop in ('pieces', 'operation_type'):
                 if data[forbidden_prop] != self.instance.__dict__[forbidden_prop]:
                     raise forms.ValidationError(_("Cannot change existing operation"))
