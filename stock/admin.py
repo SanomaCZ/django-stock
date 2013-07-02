@@ -73,6 +73,7 @@ class ItemAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug')
     readonly_fields = ('pieces',)
     inlines = [OperationInlineAdmin]
+    change_list_template = 'item_listing.html'
 
     formfield_overrides = {
         models.ImageField: {'widget': AdminImageWidget},
@@ -80,7 +81,7 @@ class ItemAdmin(admin.ModelAdmin):
 
     def thumbnail(self, obj):
         im = get_thumbnail(obj.photo, "100x100", crop='center')
-        return '<a href="%s"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
+        return '<a href="%s" class="fancybox"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
     thumbnail.allow_tags = True
 
     def add_operation(self, obj):
