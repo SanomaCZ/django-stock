@@ -60,18 +60,13 @@ class OperationAdmin(admin.ModelAdmin):
         obj.user = request.user
         return super(OperationAdmin, self).save_model(request, obj, form, change)
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        if request.method == 'POST' and object_id:
-            return HttpResponseForbidden("Cannot change existing operation")
-
-        return super(OperationAdmin, self).change_view(request, object_id, form_url, extra_context)
-
 
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'thumbnail', 'pieces', 'add_operation')
     search_fields = ('name', 'slug')
     readonly_fields = ('pieces',)
     inlines = [OperationInlineAdmin]
+    change_list_template = 'item_listing.html'
 
     formfield_overrides = {
         models.ImageField: {'widget': AdminImageWidget},
@@ -79,7 +74,7 @@ class ItemAdmin(admin.ModelAdmin):
 
     def thumbnail(self, obj):
         im = get_thumbnail(obj.photo, "100x100", crop='center')
-        return '<a href="%s"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
+        return '<a href="%s" class="fancybox"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
     thumbnail.allow_tags = True
 
     def add_operation(self, obj):

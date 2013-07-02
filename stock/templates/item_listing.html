@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_static %}
+
+{% block javascripts %}
+	{{ block.super }}
+	<script>
+		(function ($) {
+			$(document).ready(function ($) {
+				jQuery = $;
+				function scriptDone() {
+					$(".fancybox").fancybox({
+							closeClick: true
+					});
+				}
+
+				var fb = document.createElement('script')
+				fb.src = '{% static "js/fancybox.js" %}';
+				fb.type = 'text/javascript';
+				fb.onload = scriptDone
+				fb.onreadystatechange = function () {
+					if (fb.readyState == 'complete') {
+						scriptDone()
+					}
+				};
+				document.getElementsByTagName('head')[0].appendChild(fb);
+			});
+		})(django.jQuery);
+	</script>
+{% endblock %}
+
+
+{% block stylesheets %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static "fancybox/fancybox.css" %}"/>
+{% endblock %}
