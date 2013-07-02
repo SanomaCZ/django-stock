@@ -42,7 +42,8 @@ class Operation(models.Model):
     ts = models.DateTimeField(_("Processed at"), editable=False)
 
     def save(self, **kwargs):
-        self.ts = now()
+        if not self.pk:
+            self.ts = now()
         super(Operation, self).save(**kwargs)
 
     class Meta:
