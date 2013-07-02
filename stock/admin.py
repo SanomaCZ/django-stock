@@ -1,4 +1,3 @@
-from os.path import basename
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib import admin
