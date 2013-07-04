@@ -1,0 +1,11 @@
+include MANIFEST.in
+include README.rst
+include requirements.txt
+include manage.py
+include setup.py
+recursive-include stock *
+
+global-exclude .coverage
+global-exclude nosetests.xml
+global-exclude *.pyc
+global-exclude *.pyo
