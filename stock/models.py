@@ -1,3 +1,5 @@
+from os import path
+from hashlib import md5
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -7,11 +9,24 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
 
+def all_upload_to(instance, filename):
+    name, ext = path.splitext(filename)
+    to_hash = '|'.join((slugify(name), now().strftime('%Y-%m-%d %H:%M:%S:%f')))
+    if isinstance(instance, Item):
+        pth = 'p'
+    else:
+        pth = 'a'
+    return path.join(
+        pth,
+        "%s%s" % (md5(to_hash).hexdigest(), ext.lower())
+    )
+
+
 class Item(models.Model):
     name = models.CharField(_("Name"), max_length=255)
     slug = models.SlugField(max_length=64, unique=True, editable=False)
     description = models.TextField(_("Description"), blank=True)
-    photo = models.ImageField(_("Photo"), upload_to='p/', null=True, blank=True)
+    photo = models.ImageField(_("Photo"), upload_to=all_upload_to, null=True, blank=True)
     pieces = models.PositiveIntegerField(_("Pieces"), default=0, editable=False)
 
     def save(self, **kwargs):
@@ -38,7 +53,7 @@ class Operation(models.Model):
     item = models.ForeignKey(Item, verbose_name=_("Item"))
     operation_type = models.CharField(_("Operation type"), max_length='1', db_index=True, choices=TYPE_CHOICES)
     pieces = models.PositiveIntegerField(_("Pieces"), default=0)
-    attachment = models.FileField(_("Document"), upload_to="a/", null=True, blank=True)
+    attachment = models.FileField(_("Document"), upload_to=all_upload_to, null=True, blank=True)
     ts = models.DateTimeField(_("Processed at"), editable=False)
 
     def save(self, **kwargs):
