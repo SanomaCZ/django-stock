@@ -1,5 +1,5 @@
 Django>=1.5,<1.6
-South%=0.7.6
+South==0.7.6
 Pillow>=2.0
 sorl-thumbnail==11.12
 django-grappelli==2.4.5
