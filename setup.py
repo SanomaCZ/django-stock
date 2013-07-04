@@ -122,5 +122,10 @@ setup(
     install_requires=install_requires,
     test_suite='nose.collector',
     tests_require=tests_require,
-    setup_requires=setup_requires
+    setup_requires=setup_requires,
+    entry_points={
+        'console_scripts': [
+            'stock-manage = stock.custom_manage:main',
+        ],
+    },
 )
