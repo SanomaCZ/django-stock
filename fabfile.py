@@ -75,8 +75,8 @@ def server():  # abstract
     env.ln_packages = (
         '/usr/lib/python2.6/dist-packages/psycopg2-2.4.2.egg-info',
         '/usr/lib/python2.6/dist-packages/psycopg2',
-        '/usr/lib/python2.6/dist-packages/PIL.pth',
-        '/usr/lib/python2.6/dist-packages/PIL',
+        #'/usr/lib/python2.6/dist-packages/PIL.pth',
+        #'/usr/lib/python2.6/dist-packages/PIL',
     )
 
 
@@ -159,7 +159,7 @@ def svc_reload():
         return
 
     do('supervisorctl update')
-    do("supervisorctl restart base:nginx")
+    #do("supervisorctl restart base:nginx")
     do("supervisorctl restart %s" % SUPERVISOR_NAME)
 
 
