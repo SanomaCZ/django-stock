@@ -6,10 +6,13 @@ import stock
 
 install_requires = [
     'Django>=1.5.1,<1.6',
-    'South>=0.8.1',
+    'South==0.7.6',
     'Pillow>=2.0',
     'sorl-thumbnail==11.12',
-    'django-grappelli',
+    'django-grappelli==2.4.5',
+    'uwsgi==1.9.13',
+    'raven==3.4.0',
+
 ]
 
 tests_require = [

@@ -132,7 +132,6 @@ INSTALLED_APPS = (
 
     'stock',
 
-
     'sorl.thumbnail',
 )
 
