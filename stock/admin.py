@@ -73,6 +73,8 @@ class ItemAdmin(admin.ModelAdmin):
     }
 
     def thumbnail(self, obj):
+        if not obj.photo:
+            return ""
         im = get_thumbnail(obj.photo, "100x100", crop='center')
         return '<a href="%s" class="fancybox"><img src="%s" width="%d" height="%d"></a>' % (obj.photo.url, im.url, im.width, im.height)
     thumbnail.allow_tags = True
