@@ -33,18 +33,6 @@ SUPERVISOR_NAME = 'stock'
 
 NOW = datetime.now().strftime("%y%m%d_%H%M%S")
 
-WSGI_CONTENT = """
-import os
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', '%s.settings')
-
-from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
-
-from raven.contrib.django.middleware.wsgi import Sentry
-application = Sentry(application)
-""" % PROJECT_NAME
-
 
 def local():
     env.root_directory = path.dirname(__file__)
@@ -83,7 +71,7 @@ def server():  # abstract
 def mona():
     server()
 
-    env.hosts= ['stock.mona.cz']
+    env.hosts = ['stock.mona.cz']
     env.user = 'sshanoma'
 
     env.minion_user = 'sanoma'
@@ -95,8 +83,8 @@ def mona():
     env.ln_packages = (
         '/usr/lib/python2.6/dist-packages/psycopg2-2.4.2.egg-info',
         '/usr/lib/python2.6/dist-packages/psycopg2',
-        '/usr/lib/python2.6/dist-packages/PIL.pth',
-        '/usr/lib/python2.6/dist-packages/PIL',
+        #'/usr/lib/python2.6/dist-packages/PIL.pth',
+        #'/usr/lib/python2.6/dist-packages/PIL',
     )
 
 
@@ -118,10 +106,6 @@ def update():
     svc_reload()
 
 
-def add_wsgi_file():
-    run('''echo "%s" > %s/wsgi.py ''' % (WSGI_CONTENT, env.virtualenv_directory_raw()))
-
-
 #TODO - start service at a very first time
 def app_init():
     print 'app init'
@@ -136,7 +120,6 @@ def app_init():
             do('%s' % (PIP_INSTALL_FROM_REPO[PROJECT_SOURCE] % env.project_repo))
 
     do('ln -sfn %s %s' % (env.virtualenv_directory_raw(), env.virtualenv_directory()))
-    #add_wsgi_file()
 
 
 def app_update():
@@ -218,8 +201,9 @@ def env_init():
     if getattr(env, 'static_env', False):
         print 'Actually, static env is set to True, I\'m out'
         return
-    
+
     do('virtualenv --no-site-packages %s' % env.virtualenv_directory_raw())
+
 
 def env_exists(name):
     if env.host_string:
