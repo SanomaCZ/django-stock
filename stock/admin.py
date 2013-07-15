@@ -25,7 +25,7 @@ class LinkWidget(Widget):
 class OperationInlineAdmin(admin.TabularInline):
     model = Operation
     extra = 0
-    readonly_fields = ('ts', 'user', 'operation_type', 'pieces')
+    readonly_fields = ('ts', 'user', 'operation_type', 'pieces', 'note', 'person')
 
     formfield_overrides = {
         models.FileField: {'widget': LinkWidget},

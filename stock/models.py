@@ -54,6 +54,8 @@ class Operation(models.Model):
     operation_type = models.CharField(_("Operation type"), max_length='1', db_index=True, choices=TYPE_CHOICES)
     pieces = models.PositiveIntegerField(_("Pieces"), default=0)
     attachment = models.FileField(_("Document"), upload_to=all_upload_to, null=True, blank=True)
+    note = models.TextField(_("Note"), blank=True)
+    person = models.CharField(_("Person"), max_length=96, blank=True)
     ts = models.DateTimeField(_("Processed at"), editable=False)
 
     def save(self, **kwargs):
