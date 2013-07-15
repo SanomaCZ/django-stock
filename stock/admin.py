@@ -62,7 +62,8 @@ class OperationAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'thumbnail', 'pieces', 'add_operation')
+    list_display = ('name', 'thumbnail', 'pieces', 'expiration_date', 'add_operation')
+    list_filter = ('expiration_date',)
     search_fields = ('name', 'slug')
     readonly_fields = ('pieces',)
     inlines = [OperationInlineAdmin]

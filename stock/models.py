@@ -27,6 +27,7 @@ class Item(models.Model):
     slug = models.SlugField(max_length=64, unique=True, editable=False)
     description = models.TextField(_("Description"), blank=True)
     photo = models.ImageField(_("Photo"), upload_to=all_upload_to, null=True, blank=True)
+    expiration_date = models.DateField(_("Expiration date"), null=True, blank=True)
     pieces = models.PositiveIntegerField(_("Pieces"), default=0, editable=False)
 
     def save(self, **kwargs):
