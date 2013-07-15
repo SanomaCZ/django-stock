@@ -1,4 +1,5 @@
 from os.path import join, dirname, pardir, abspath
+from stock import __versionstr__
 
 PROJECT_ROOT = abspath(join(dirname(__file__), pardir))
 DEV_TMP_DIR = join(PROJECT_ROOT, pardir, '.devtmp')
@@ -139,76 +140,6 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 SESSION_COOKIE_DOMAIN = ''
 
-# search haystack / ES configuration
-# haystack search
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'sm_search_common.backend.elasticsearch.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'stock',
-    },
-}
-
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 15
-HAYSTACK_ELASTICSEARCH_SETTINGS = {
-    "settings": {
-        "analysis": {
-            "analyzer": {
-                "default": {
-                    "tokenizer": "lowercase",
-                    "filter": ["asciifolding", "standard", "stop", "cz_stemmer"],
-                    "char_filter": ["html_strip"],
-                    "alias": ["snowball"]
-                },
-                "ngram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "lowercase",
-                    "filter": ["haystack_ngram"]
-                },
-                "edgengram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "lowercase",
-                    "filter": ["haystack_edgengram"]
-                }
-            },
-            "tokenizer": {
-                "haystack_ngram_tokenizer": {
-                    "type": "nGram",
-                    "min_gram": 3,
-                    "max_gram": 15
-                },
-                "haystack_edgengram_tokenizer": {
-                    "type": "edgeNGram",
-                    "min_gram": 2,
-                    "max_gram": 15,
-                    "side": "front"
-                }
-            },
-            "filter": {
-                "stop": {
-                    "type": "stop",
-                    "stopwords_path": "stopwords.txt"
-                },
-                "cz_stemmer": {
-                    "type": "stemmer",
-                    "name": "czech"
-                },
-                "haystack_ngram": {
-                    "type": "nGram",
-                    "min_gram": 3,
-                    "max_gram": 15
-                },
-                "haystack_edgengram": {
-                    "type": "edgeNGram",
-                    "min_gram": 2,
-                    "max_gram": 15
-                }
-            }
-        }
-    }
-}
-
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -239,3 +170,5 @@ LOGGING = {
         },
     },
 }
+
+GRAPPELLI_ADMIN_TITLE = "Stock %s" % __versionstr__
